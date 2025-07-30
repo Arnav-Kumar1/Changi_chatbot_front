@@ -7,9 +7,8 @@ from dotenv import load_dotenv
 load_dotenv()
 DEFAULT_API_KEY = os.getenv("GOOGLE_API_KEY")
 BACKEND_URL = os.getenv("BACKEND_API_URL", "http://localhost:8000")
-API_ENDPOINT = BACKEND_URL  # Already points to full /api/qa
-HEALTHCHECK_ENDPOINT = BACKEND_URL.replace("/qa", "/healthcheck")
-
+API_ENDPOINT = f"{BACKEND_URL}/api/qa"
+HEALTHCHECK_ENDPOINT = f"{BACKEND_URL}/api/healthcheck"
 GOOGLE_API_LINK = "https://aistudio.google.com/app/apikey"
 
 # --- Streamlit Page Config ---
@@ -96,7 +95,7 @@ if page == "🏠 Home":
     # --- Main Chat UI (if backend_status == "ok") ---
     col1, col2 = st.columns([3, 2])
     with col1:
-        user_query = st.text_input("💬 Enter your question", placeholder="E.g. How to get to the Jewel airport?")
+        user_query = st.text_input("💬 Enter your question", placeholder="E.g. What are the opening hours of Jewel?")
         ask_button = st.button("Ask", use_container_width=True)
 
     with col2:
@@ -124,7 +123,8 @@ if page == "🏠 Home":
                         st.write(result.get("answer", "No answer returned."))
                         show_sources(result.get("sources", []))
                     elif res.status_code in [403, 429, 500]:
-                        st.error("🚫 Your API key may be invalid or has exceeded usage limits.")
+                        key_origin = "your key" if st.session_state.get("gemini_key") else "the default key"
+                        st.error(f"🚫 Gemini API error. The request using {key_origin} may have exceeded quota or is invalid.")
                         st.info(f"🔗 [Get your key here]({GOOGLE_API_LINK})")
                     else:
                         st.error(f"❌ {res.status_code} - {res.text}")
