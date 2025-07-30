@@ -95,7 +95,7 @@ if page == "🏠 Home":
     # --- Main Chat UI (if backend_status == "ok") ---
     col1, col2 = st.columns([3, 2])
     with col1:
-        user_query = st.text_input("💬 Enter your question", placeholder="E.g. What are the opening hours of Jewel?")
+        user_query = st.text_input("💬 Enter your question", placeholder="E.g. How to get to the Jewel airport?")
         ask_button = st.button("Ask", use_container_width=True)
 
     with col2:
