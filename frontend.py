@@ -7,8 +7,9 @@ from dotenv import load_dotenv
 load_dotenv()
 DEFAULT_API_KEY = os.getenv("GOOGLE_API_KEY")
 BACKEND_URL = os.getenv("BACKEND_API_URL", "http://localhost:8000")
-API_ENDPOINT = f"{BACKEND_URL}/api/qa"
-HEALTHCHECK_ENDPOINT = f"{BACKEND_URL}/api/healthcheck"
+API_ENDPOINT = BACKEND_URL  # Already points to full /api/qa
+HEALTHCHECK_ENDPOINT = BACKEND_URL.replace("/qa", "/healthcheck")
+
 GOOGLE_API_LINK = "https://aistudio.google.com/app/apikey"
 
 # --- Streamlit Page Config ---
