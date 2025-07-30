@@ -1,57 +1,3 @@
-# # streamlit_app.py
-# import os
-# import requests
-# import streamlit as st
-# from dotenv import load_dotenv
-
-# # --- Load environment variables ---
-# load_dotenv()
-# API_KEY = os.getenv("GOOGLE_API_KEY")
-# API_ENDPOINT = os.getenv("BACKEND_API_URL", "http://localhost:8000/api/qa")
-
-# st.set_page_config(page_title="🛫 Changi & Jewel Chatbot", layout="wide")
-# st.title("🛫 Changi & Jewel Airport RAG Chatbot")
-# st.markdown("Ask anything about Changi or Jewel websites using a RAG-powered assistant.")
-
-# # Use the loaded API_KEY directly
-# user_api_key = API_KEY
-
-# # --- User Query ---
-# user_query = st.text_input("💬 What would you like to know?")
-# ask_button = st.button("Ask")
-
-# # --- Query the RAG API ---
-# if ask_button:
-#     if not user_query.strip():
-#         st.warning("❗ Please enter a question.")
-#     else:
-#         with st.spinner("🤖 Generating answer..."):
-#             try:
-#                 res = requests.post(
-#                     API_ENDPOINT,
-#                     json={"user_query": user_query, "api_key": user_api_key},
-#                     timeout=45
-#                 )
-
-#                 if res.status_code == 200:
-#                     result = res.json()
-#                     st.success("✅ Answer:")
-#                     st.write(result.get("answer", "No answer returned."))
-
-#                     sources = result.get("sources", [])
-#                     if sources:
-#                         st.markdown("### 📎 Sources:")
-#                         for url in sources:
-#                             st.markdown(f"- [{url}]({url})")
-#                     else:
-#                         st.info("ℹ️ No sources provided.")
-#                 else:
-#                     st.error(f"❌ {res.status_code} - {res.text}")
-
-#             except requests.exceptions.Timeout:
-#                 st.error("⏱️ Request timed out. Try again later.")
-#             except Exception as e:
-#                 st.error(f"🚨 Unexpected error: {str(e)}")
 import os
 import requests
 import streamlit as st
@@ -98,13 +44,16 @@ if page == "🏠 Home":
 
     with col2:
         st.markdown("#### 🔑 Google API Key")
-        user_api_key = st.text_input("Paste your API key here", value=DEFAULT_API_KEY or "", type="password")
+        user_api_key_input = st.text_input("Paste your API key here (optional)", value="", type="password")
+
+    # Fallback logic
+    user_api_key = user_api_key_input.strip() or DEFAULT_API_KEY
 
     if ask_button:
         if not user_query.strip():
             st.warning("❗ Please enter a question.")
-        elif not user_api_key.strip():
-            st.warning("❗ Please provide a valid API key.")
+        elif not user_api_key:
+            st.warning("❗ No API key available. Please paste a valid key.")
         else:
             with st.spinner("🤖 Generating answer..."):
                 try:
@@ -189,6 +138,7 @@ elif page == "📬 Contact":
     st.markdown("""
 For support, suggestions, or questions:
 
-- 📧 Email: arnav9637@gmail.com 
-- 🧠 GitHub: https://github.com/Arnav-Kumar1/Changi_chatbot
+- 📧 Email: [arnav@example.com](mailto:arnav@example.com)  
+- 🧠 GitHub: [github.com/arnav-ai](https://github.com/arnav-ai)  
+- 📝 Report a bug: [GitHub Issues](https://github.com/arnav-ai/changi-chatbot/issues)
 """)
